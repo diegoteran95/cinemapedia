@@ -1,25 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'movies_slideshow_provider.dart';
+part of 'initial_loading_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$moviesSlideshowHash() => r'bad9305ed02416bc2f77696372d104f593c095ba';
+String _$initialLoadingHash() => r'2187daaf1785d1535c3d55e31b2f5f7709cdab73';
 
-/// See also [moviesSlideshow].
-@ProviderFor(moviesSlideshow)
-final moviesSlideshowProvider = AutoDisposeProvider<List<Movie>>.internal(
-  moviesSlideshow,
-  name: r'moviesSlideshowProvider',
+/// See also [initialLoading].
+@ProviderFor(initialLoading)
+final initialLoadingProvider = AutoDisposeProvider<bool>.internal(
+  initialLoading,
+  name: r'initialLoadingProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$moviesSlideshowHash,
+      : _$initialLoadingHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef MoviesSlideshowRef = AutoDisposeProviderRef<List<Movie>>;
+typedef InitialLoadingRef = AutoDisposeProviderRef<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
