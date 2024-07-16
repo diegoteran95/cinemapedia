@@ -26,6 +26,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   late final MovieCallback popularCallback;
   late final MovieCallback upcomingCallback;
   late final MovieCallback topRatedCallback;
+  late final GetActorsCallback getActorsCallback;
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     popularCallback = ref.read(moviesRepositoryProvider).getPopular;
     upcomingCallback = ref.read(moviesRepositoryProvider).getUpcoming;
     topRatedCallback = ref.read(moviesRepositoryProvider).getTopRated;
+    getActorsCallback = ref.read(actorsRepositoryProvider).getActorsByMovie;
 
     ref
         .read(moviesNotifierProvider(nowPlayingCallback).notifier)
@@ -55,7 +57,8 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     final upcomingMovies = ref.watch(moviesNotifierProvider(upcomingCallback));
     final topRatedMovies = ref.watch(moviesNotifierProvider(topRatedCallback));
 
-    return Visibility( // Este widget sirve para ocultar en base a una condicion hasta que se cargue el widget
+    return Visibility(
+      // Este widget sirve para ocultar en base a una condicion hasta que se cargue el widget
       visible: !initialLoading,
       child: CustomScrollView(slivers: [
         const SliverAppBar(

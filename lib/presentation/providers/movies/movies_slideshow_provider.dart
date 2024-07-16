@@ -8,7 +8,6 @@ List<Movie> moviesSlideshow(MoviesSlideshowRef ref) {
   final nowPlayingCallback = ref.watch(moviesRepositoryProvider).getNowPlaying;
   final nowPlayingMovies =
       ref.watch(moviesNotifierProvider(nowPlayingCallback));
-  print("entra slideshow");
   if (nowPlayingMovies.isEmpty) return [];
 
   return nowPlayingMovies.sublist(0, 6);
