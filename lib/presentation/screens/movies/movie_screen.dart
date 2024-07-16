@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
 
@@ -39,7 +40,9 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
           _CustomSliverAppbar(movie: movie),
           SliverList(
               delegate: SliverChildBuilderDelegate(
-                  (context, index) => _MovieDetails(movie: movie),
+                  (context, index) => _MovieDetails(
+                        movie: movie,
+                      ),
                   childCount: 1)),
         ],
         physics: const ClampingScrollPhysics(),
@@ -50,6 +53,7 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
 
 class _MovieDetails extends StatelessWidget {
   final Movie movie;
+
   const _MovieDetails({required this.movie});
 
   @override
@@ -106,9 +110,10 @@ class _MovieDetails extends StatelessWidget {
             ],
           ),
         ),
+        _ActorsByMovie(movieId: movie.id),
         const SizedBox(
-          height: 100,
-        )
+          height: 50,
+        ),
       ],
     );
   }
@@ -138,6 +143,13 @@ class _CustomSliverAppbar extends StatelessWidget {
               child: Image.network(
                 movie.posterPath,
                 fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress != null) {
+                    return const SizedBox();
+                  }
+
+                  return FadeIn(child: child);
+                },
               ),
             ),
             const SizedBox.expand(
@@ -168,6 +180,83 @@ class _CustomSliverAppbar extends StatelessWidget {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ActorsByMovie extends ConsumerStatefulWidget {
+  final int movieId;
+  const _ActorsByMovie({required this.movieId});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _ActorsByMovieState();
+}
+
+class _ActorsByMovieState extends ConsumerState<_ActorsByMovie> {
+  late final GetActorsCallback getActorsCallback;
+
+  @override
+  void initState() {
+    super.initState();
+    getActorsCallback = ref.read(actorsRepositoryProvider).getActorsByMovie;
+    ref
+        .read(actorsMapNotifierProvider(getActorsCallback).notifier)
+        .loadActors(widget.movieId.toString());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final actorsByMovie =
+        ref.watch(actorsMapNotifierProvider(getActorsCallback));
+    if (actorsByMovie[widget.movieId.toString()] == null) {
+      return const CircularProgressIndicator(
+        strokeWidth: 2,
+      );
+    }
+    final actors = actorsByMovie[widget.movieId.toString()]!;
+    return SizedBox(
+      height: 300,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: actors.length,
+        itemBuilder: (context, index) {
+          final actor = actors[index];
+          return Container(
+            padding: const EdgeInsets.all(8),
+            width: 135,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FadeInRight(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      actor.profilePath,
+                      height: 180,
+                      width: 135,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  actor.name,
+                  maxLines: 2,
+                ),
+                Text(
+                  actor.character ?? "",
+                  maxLines: 2,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      overflow: TextOverflow.ellipsis),
+                )
+              ],
+            ),
+          );
+        },
       ),
     );
   }
