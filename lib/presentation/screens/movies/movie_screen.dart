@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
@@ -130,6 +131,9 @@ class _CustomSliverAppbar extends StatelessWidget {
       backgroundColor: Colors.black,
       expandedHeight: size.height * 0.7,
       foregroundColor: Colors.white,
+      actions: [
+        IconButton(onPressed: () {}, icon: const Icon(Icons.favorite_border)),
+      ],
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         title: Text(
@@ -152,32 +156,33 @@ class _CustomSliverAppbar extends StatelessWidget {
                 },
               ),
             ),
-            const SizedBox.expand(
-              child: DecoratedBox(
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment
-                              .topCenter, // desde donde empieza el gradiente
-                          end: Alignment
-                              .bottomCenter, // donde termina el gradiente
-                          stops: [
-                    0.7,
-                    1.0
-                  ], // En que parte de la pantalla empieza y termina
-                          colors: [
-                    Colors.transparent,
-                    Colors.black87
-                  ]))),
-            ),
-            const SizedBox.expand(
-              child: DecoratedBox(
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment
-                              .topLeft, // desde donde empieza el gradiente/ donde termina el gradiente
-                          stops: [0.0, 0.4],
-                          colors: [Colors.black87, Colors.transparent]))),
-            )
+            const _CustomGradient(
+                begin: Alignment.topRight, // desde donde empieza el gradiente
+                end: Alignment.bottomLeft,
+                colors: [
+                  Colors.black54,
+                  Colors.transparent,
+                ],
+                stops: [
+                  0.0,
+                  0.2
+                ]),
+            const _CustomGradient(
+                begin: Alignment.topCenter, // desde donde empieza el gradiente
+                end: Alignment.bottomCenter, // donde termina el gradiente
+                stops: [
+                  0.8,
+                  1.0
+                ], // En que parte de la pantalla empieza y termina
+                colors: [
+                  Colors.transparent,
+                  Colors.black54
+                ]),
+            const _CustomGradient(
+                begin: Alignment
+                    .topLeft, // desde donde empieza el gradiente/ donde termina el gradiente
+                stops: [0.0, 0.4],
+                colors: [Colors.black87, Colors.transparent]),
           ],
         ),
       ),
@@ -258,6 +263,32 @@ class _ActorsByMovieState extends ConsumerState<_ActorsByMovie> {
           );
         },
       ),
+    );
+  }
+}
+
+class _CustomGradient extends StatelessWidget {
+  final AlignmentGeometry begin;
+  final AlignmentGeometry end;
+  final List<Color> colors;
+  final List<double> stops;
+
+  const _CustomGradient(
+      {this.begin = Alignment.centerLeft,
+      this.end = Alignment.centerRight,
+      required this.colors,
+      required this.stops});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: DecoratedBox(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: begin, // desde donde empieza el gradiente
+                  end: end, // donde termina el gradiente
+                  stops: stops, // En que parte de la pantalla empieza y termina
+                  colors: colors))),
     );
   }
 }
